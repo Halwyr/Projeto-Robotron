@@ -1,24 +1,24 @@
 function mostrarPopup(mensagem) {
-  document.getElementById("popup-message").innerHTML = mensagem;
+  document.getElementById('popup-message').innerHTML = mensagem;
 
-  const popup = document.getElementById("popup");
-  const overlay = document.getElementById("overlay");
+  const popup = document.getElementById('popup');
+  const overlay = document.getElementById('overlay');
 
-  popup.classList.add("show");
-  overlay.classList.add("show");
-}
+  popup.classList.add('show');
+  overlay.classList.add('show');
+};
 
 function fecharPopup() {
-  const popup = document.getElementById("popup");
-  const overlay = document.getElementById("overlay");
+  const popup = document.getElementById('popup');
+  const overlay = document.getElementById('overlay');
 
-  popup.classList.remove("show");
-  overlay.classList.remove("show");
-}
+  popup.classList.remove('show');
+  overlay.classList.remove('show');
+};
 
-const robotron = document.querySelector("#Robotron");
-const controles = document.querySelectorAll("[data-controle]");
-
+const robotron = document.querySelector('#Robotron');
+const controle = document.querySelectorAll('[data-controle]');
+const estatisticas = document.querySelectorAll('[data-estatistica]');
 const pecas = {
     "bracos": {
         "forca": 29,
@@ -26,7 +26,6 @@ const pecas = {
         "energia": -21,
         "velocidade": -5
     },
-
     "blindagem": {
         "forca": 41,
         "poder": 20,
@@ -51,28 +50,37 @@ const pecas = {
         "energia": 0,
         "velocidade": -2
     }
-}
+};
 
-controles.forEach((elemento) => {
-  elemento.addEventListener("click", (evento) => {
-    manipulaDados(evento.target.dataset.controle, evento.target.parentNode);
-  });
+controle.forEach((elemento) => {
+  elemento.addEventListener('click', (evento) => {
+    manipulaDados(evento.target.dataset.controle, evento.target.parentNode, evento.target.dataset.peca);
+  })
 });
 
-function manipulaDados(operacao, controle) {
-  const pecaRobo = controle.querySelector("[data-contador]");
+function manipulaDados(operacao, controle, peca) {
+  const contador = controle.querySelector('[data-contador]');
+  let valorAtual = parseInt(contador.value);
 
-  if (operacao === "-") {
-    pecaRobo.value--;
-  } else {
-    pecaRobo.value++;
+  if (operacao === '-' && valorAtual > 0) {
+    contador.value = valorAtual - 1;
+    atualizaEstatisticas(peca, -1);
+  } else if (operacao === '+') {
+    contador.value = valorAtual + 1;
+    atualizaEstatisticas(peca, 1);
   }
-}
+};
+
+function atualizaEstatisticas(peca, operacao) {
+    estatisticas.forEach((elemento) => {
+        elemento.textContent = parseInt(elemento.textContent) + (pecas[peca][elemento.dataset.estatistica] * operacao);
+    });
+};
+
+robotron.addEventListener('click', dizOi);
 
 function dizOi() {
   mostrarPopup(
-    "Olá,<br>Devo me fortalecer para a invasão que está prestes a começar.<br>Vamos fazer alguns upgrades para nos prepararmos para o combate."
+    'Olá,<br>Devo me fortalecer para a invasão que está prestes a começar.<br>Vamos fazer alguns upgrades para nos prepararmos para o combate.'
   );
-}
-
-robotron.addEventListener("click", dizOi);
+};
